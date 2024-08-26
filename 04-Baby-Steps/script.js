@@ -1,53 +1,55 @@
 'use strict';
-/*
-// Selecting and displaying on console the element with the message class
-console.log(document.querySelector('.message'));
-// Selecting the element with the message class and editing its text content
-document.querySelector('.message').textContent = 'AAAH';
-
-document.querySelector('.number').textContent = 13;
-
-document.querySelector('.userName').textContent = 'Francisco Javier';
-
-// Set the value in the input box
-document.querySelector('.userNum').value = 100;
-*/
-
 // Random number 1-20
 let numRandom = Math.trunc(Math.random() * 20) + 1;
 let userGuess;
 let userScore = 20;
 
-document.querySelector('.number').textContent = numRandom;
-document.querySelector('.score').textContent = userScore;
+// function (refactoring)
+// Create a function to display a message
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
+
+const displayScore = function (score) {
+  document.querySelector('.score').textContent = score;
+};
+
+displayScore(userScore);
 
 // Clicking the check button
 document.querySelector('.check').addEventListener('click', function () {
   userGuess = Number(document.querySelector('.guess').value);
-  document.querySelector('.message').textContent = 'Playing...';
 
+  // When the input is not valid
   if (!userGuess) {
-    document.querySelector('.message').textContent = 'Not a valid number!';
-  } else if (userGuess === numRandom) {
-    document.querySelector('.message').textContent = 'You won!';
+    displayMessage('Not a valid number!');
+  }
+  // When the guess is right
+  else if (userGuess === numRandom) {
+    document.querySelector('.number').textContent = numRandom;
+
+    displayMessage('You won!');
+    document.querySelector('.check').disabled = true;
     document.querySelector('body').style.backgroundColor = '#60b347';
+
     document.querySelector('.number').style.width = '30rem';
-  } else if (userGuess > numRandom) {
+  }
+  // When the guess is wrong
+  else if (userGuess !== numRandom) {
+    // When there's still score left
     if (userScore > 1) {
-      document.querySelector('.message').textContent = 'A lower number!';
       userScore--;
-      document.querySelector('.score').textContent = userScore;
-    } else {
-      document.querySelector('.message').textContent = 'Game over!';
+
+      displayMessage(userGuess > numRandom ? 'Too high!' : 'Too low!');
+
+      displayScore(userScore);
     }
-  } else if (userGuess < numRandom) {
-    if (userScore > 1) {
-      document.querySelector('.message').textContent = 'A higher number!';
-      userScore--;
-      document.querySelector('.score').textContent = userScore;
-    } else {
-      document.querySelector('.message').textContent = 'Game over!';
-      document.querySelector('.score').textContent = 0;
+    // When no more attempts are left
+    else {
+      displayMessage('Game over!');
+
+      displayScore(0);
+      document.querySelector('.check').disabled = true;
     }
   }
 });
@@ -56,8 +58,11 @@ document.querySelector('.check').addEventListener('click', function () {
 document.querySelector('.again').addEventListener('click', function () {
   userScore = 20;
   numRandom = Math.trunc(Math.random() * 20) + 1;
-  document.querySelector('.number').textContent = numRandom;
-  document.querySelector('.score').textContent = userScore;
+  displayScore(userScore);
   document.querySelector('.guess').value = '';
-  document.querySelector('.message').textContent = 'Start guessing...';
+  displayMessage('Start guessing...');
+  document.querySelector('body').style.backgroundColor = '#222';
+  document.querySelector('.number').style.width = '15rem';
+  document.querySelector('.number').textContent = '?';
+  document.querySelector('.check').disabled = false;
 });
