@@ -1,45 +1,74 @@
 'use strict';
 
-// Select DOM element by selector (ID, Classes as parameter)
+// Selecting elements
+// total score
 const score0El = document.querySelector('#score--0');
-// Select DOM element by ID (the name of the ID as parameter)
 const score1El = document.getElementById('score--1');
+// current scores
 const current0El = document.getElementById('current--0');
 const current1El = document.getElementById('current--1');
-
-// Selecting elements
+// dice
 const diceEL = document.querySelector('.dice');
+// buttons
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
 
-// Automatically converted to string
+// Starting conditions
+const startGame = function () {
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  diceEL.classList.add('hidden');
+  const scores = [0, 0];
+  let currentScore = 0;
+  let activePlayer = 0;
+};
+/*
 score0El.textContent = 0;
 score1El.textContent = 0;
 diceEL.classList.add('hidden');
-
+const scores = [0, 0];
 let currentScore = 0;
+let activePlayer = 0;
+*/
+startGame();
 
+// New game button functionality
 btnNew.addEventListener('click', function () {
   console.log('Starting game');
+  startGame();
 });
+
+// Hold button functionality
+btnHold.addEventListener('click', function () {
+  console.log('Holding');
+  score[activePlayer] += currentScore;
+  if (score[activePlayer] > 99) {
+    // Wins!
+  } else {
+    if (activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0));
+  }
+});
+
+// Roll dice button functionality
 btnRoll.addEventListener('click', function () {
-  // Generate a random dice roll
+  // Generate a dice roll, display dice, set the correct img
   const dice = Math.trunc(Math.random() * 6) + 1;
-  // Display dice
   diceEL.classList.remove('hidden');
-  // Update the src attribute of the dice element
   diceEL.src = `dice-${dice}.png`;
 
   // Check for rolled 1
   if (dice !== 1) {
-    // Add dice to current score
+    // Add to current score and display to active player
     currentScore += dice;
-    current0El.textContent = currentScore; // CHANGE LATER
+
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
   } else {
-    // Switch to next player
+    // Reset current score and switch player
+    currentScore = 0;
+    document.getElementById(`current--${activePlayer}`).textContent =
+      currentScore;
+    if (activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0));
   }
-});
-btnHold.addEventListener('click', function () {
-  console.log('Holding');
 });
